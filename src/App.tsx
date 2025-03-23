@@ -439,6 +439,7 @@ export default function App() {
         (operator) =>
           operator.value !== "isEmpty" && operator.value !== "isNotEmpty"
       ),
+      minWidth: 150,
       flex: 3,
     },
     {
@@ -471,6 +472,7 @@ export default function App() {
           ))}
         </Box>
       ),
+      minWidth: 150,
       flex: 3,
     },
     ...playerData.map<GridColDef>(
@@ -551,12 +553,13 @@ export default function App() {
         <RowActionsMenu
           editLootType={() => {
             setEditLootId(params.row.id as string);
-            setEditLootDialogOpen(true)}
-          }
+            setEditLootDialogOpen(true);
+          }}
           removeLootType={() => removeLootType(params.row.id as string)}
         />
       ),
       align: "right",
+      minWidth: 75,
       flex: 1,
     },
   ];
@@ -569,6 +572,8 @@ export default function App() {
     syncDataToLocalStorage(LOCAL_STORAGE_LOOT_DATA_KEY, lootData);
   }, [lootData]);
 
+  const isSmallScreen = window.innerWidth < 600;
+
   return (
     <Layout
       addLootType={addLootType}
@@ -580,6 +585,19 @@ export default function App() {
         <DataGrid
           rows={rows(playerData)}
           columns={columns(playerData)}
+          initialState={{
+            columns: {
+              columnVisibilityModel: {
+                actions: false,
+                ...(isSmallScreen
+                  ? {
+                      quantity: false,
+                      tags: false,
+                    }
+                  : {}),
+              },
+            },
+          }}
           processRowUpdate={(updatedRow) => {
             const updatedPlayerData = playerData.map((player) => {
               const updatedQuantity = updatedRow[`${player.id}.quantity`];

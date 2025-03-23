@@ -59,7 +59,8 @@ const OptionsMenu: React.FC<{
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "mhw-board-game-data.json";
+    const currentDate = new Date().toISOString().split("T")[0];
+    a.download = `mhw-board-game-data-${currentDate}.json`;
     a.click();
   };
 
